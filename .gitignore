@@ -1,0 +1,9 @@
+bin/
+obj/
+.vs/
+packages/
+Properties/
+Form1.resx
+App.config
+StockDesktopApp.csproj
+StockDesktopApp.sln
