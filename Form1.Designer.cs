@@ -30,31 +30,38 @@
         {
             this.tcLowHigh = new System.Windows.Forms.TabControl();
             this.tabMinHigh = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.lblHighPrice = new System.Windows.Forms.Label();
             this.lblLowPrice = new System.Windows.Forms.Label();
             this.lblHigh = new System.Windows.Forms.Label();
             this.lblLow = new System.Windows.Forms.Label();
-            this.btnUpdateLow = new System.Windows.Forms.Button();
-            this.btnUpdate = new System.Windows.Forms.Button();
             this.rtbResult = new System.Windows.Forms.RichTextBox();
             this.tabStock = new System.Windows.Forms.TabPage();
             this.btnClear = new System.Windows.Forms.Button();
             this.rtbOneStock = new System.Windows.Forms.RichTextBox();
-            this.btnData = new System.Windows.Forms.Button();
+            this.btnGetData = new System.Windows.Forms.Button();
             this.tbMonths = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.lbName = new System.Windows.Forms.Label();
             this.tbStockName = new System.Windows.Forms.TextBox();
+            this.tabSearchDates = new System.Windows.Forms.TabPage();
+            this.labelSearchDates = new System.Windows.Forms.Label();
+            this.rtbHighLowDates = new System.Windows.Forms.RichTextBox();
+            this.btnSearchDates = new System.Windows.Forms.Button();
+            this.tbSearchDates = new System.Windows.Forms.TextBox();
+            this.btnClearDates = new System.Windows.Forms.Button();
             this.tcLowHigh.SuspendLayout();
             this.tabMinHigh.SuspendLayout();
             this.tabStock.SuspendLayout();
+            this.tabSearchDates.SuspendLayout();
             this.SuspendLayout();
             // 
             // tcLowHigh
             // 
             this.tcLowHigh.Controls.Add(this.tabMinHigh);
             this.tcLowHigh.Controls.Add(this.tabStock);
+            this.tcLowHigh.Controls.Add(this.tabSearchDates);
             this.tcLowHigh.Location = new System.Drawing.Point(2, 1);
             this.tcLowHigh.Name = "tcLowHigh";
             this.tcLowHigh.SelectedIndex = 0;
@@ -63,13 +70,12 @@
             // 
             // tabMinHigh
             // 
+            this.tabMinHigh.Controls.Add(this.button1);
             this.tabMinHigh.Controls.Add(this.progressBar);
             this.tabMinHigh.Controls.Add(this.lblHighPrice);
             this.tabMinHigh.Controls.Add(this.lblLowPrice);
             this.tabMinHigh.Controls.Add(this.lblHigh);
             this.tabMinHigh.Controls.Add(this.lblLow);
-            this.tabMinHigh.Controls.Add(this.btnUpdateLow);
-            this.tabMinHigh.Controls.Add(this.btnUpdate);
             this.tabMinHigh.Controls.Add(this.rtbResult);
             this.tabMinHigh.Location = new System.Drawing.Point(4, 25);
             this.tabMinHigh.Name = "tabMinHigh";
@@ -78,6 +84,15 @@
             this.tabMinHigh.TabIndex = 0;
             this.tabMinHigh.Text = "52 low and high prices";
             this.tabMinHigh.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(481, 273);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(282, 50);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
             // 
             // progressBar
             // 
@@ -124,28 +139,6 @@
             this.lblLow.TabIndex = 3;
             this.lblLow.Text = "Total low:";
             // 
-            // btnUpdateLow
-            // 
-            this.btnUpdateLow.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdateLow.Location = new System.Drawing.Point(477, 277);
-            this.btnUpdateLow.Name = "btnUpdateLow";
-            this.btnUpdateLow.Size = new System.Drawing.Size(281, 46);
-            this.btnUpdateLow.TabIndex = 2;
-            this.btnUpdateLow.Text = "Update low file";
-            this.btnUpdateLow.UseVisualStyleBackColor = true;
-            this.btnUpdateLow.Click += new System.EventHandler(this.btnUpdateLow_Click);
-            // 
-            // btnUpdate
-            // 
-            this.btnUpdate.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUpdate.Location = new System.Drawing.Point(477, 225);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(282, 46);
-            this.btnUpdate.TabIndex = 1;
-            this.btnUpdate.Text = "Update high file";
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-            // 
             // rtbResult
             // 
             this.rtbResult.Location = new System.Drawing.Point(7, 7);
@@ -158,7 +151,7 @@
             // 
             this.tabStock.Controls.Add(this.btnClear);
             this.tabStock.Controls.Add(this.rtbOneStock);
-            this.tabStock.Controls.Add(this.btnData);
+            this.tabStock.Controls.Add(this.btnGetData);
             this.tabStock.Controls.Add(this.tbMonths);
             this.tabStock.Controls.Add(this.label2);
             this.tabStock.Controls.Add(this.lbName);
@@ -190,16 +183,16 @@
             this.rtbOneStock.TabIndex = 5;
             this.rtbOneStock.Text = "";
             // 
-            // btnData
+            // btnGetData
             // 
-            this.btnData.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnData.Location = new System.Drawing.Point(17, 273);
-            this.btnData.Name = "btnData";
-            this.btnData.Size = new System.Drawing.Size(321, 50);
-            this.btnData.TabIndex = 4;
-            this.btnData.Text = "Get data";
-            this.btnData.UseVisualStyleBackColor = true;
-            this.btnData.Click += new System.EventHandler(this.btnData_Click);
+            this.btnGetData.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGetData.Location = new System.Drawing.Point(17, 273);
+            this.btnGetData.Name = "btnGetData";
+            this.btnGetData.Size = new System.Drawing.Size(321, 50);
+            this.btnGetData.TabIndex = 4;
+            this.btnGetData.Text = "Get data";
+            this.btnGetData.UseVisualStyleBackColor = true;
+            this.btnGetData.Click += new System.EventHandler(this.btnGetData_Click);
             // 
             // tbMonths
             // 
@@ -233,6 +226,69 @@
             this.tbStockName.Size = new System.Drawing.Size(321, 22);
             this.tbStockName.TabIndex = 0;
             // 
+            // tabSearchDates
+            // 
+            this.tabSearchDates.Controls.Add(this.btnClearDates);
+            this.tabSearchDates.Controls.Add(this.tbSearchDates);
+            this.tabSearchDates.Controls.Add(this.btnSearchDates);
+            this.tabSearchDates.Controls.Add(this.rtbHighLowDates);
+            this.tabSearchDates.Controls.Add(this.labelSearchDates);
+            this.tabSearchDates.Location = new System.Drawing.Point(4, 25);
+            this.tabSearchDates.Name = "tabSearchDates";
+            this.tabSearchDates.Padding = new System.Windows.Forms.Padding(3);
+            this.tabSearchDates.Size = new System.Drawing.Size(769, 331);
+            this.tabSearchDates.TabIndex = 2;
+            this.tabSearchDates.Text = "Search dates";
+            this.tabSearchDates.UseVisualStyleBackColor = true;
+            // 
+            // labelSearchDates
+            // 
+            this.labelSearchDates.AutoSize = true;
+            this.labelSearchDates.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSearchDates.ForeColor = System.Drawing.Color.Black;
+            this.labelSearchDates.Location = new System.Drawing.Point(6, 76);
+            this.labelSearchDates.Name = "labelSearchDates";
+            this.labelSearchDates.Size = new System.Drawing.Size(282, 18);
+            this.labelSearchDates.TabIndex = 0;
+            this.labelSearchDates.Text = "Enter date for search in format \"d/m/y\":";
+            // 
+            // rtbHighLowDates
+            // 
+            this.rtbHighLowDates.Location = new System.Drawing.Point(351, 16);
+            this.rtbHighLowDates.Name = "rtbHighLowDates";
+            this.rtbHighLowDates.Size = new System.Drawing.Size(408, 307);
+            this.rtbHighLowDates.TabIndex = 1;
+            this.rtbHighLowDates.Text = "";
+            // 
+            // btnSearchDates
+            // 
+            this.btnSearchDates.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSearchDates.Location = new System.Drawing.Point(206, 140);
+            this.btnSearchDates.Name = "btnSearchDates";
+            this.btnSearchDates.Size = new System.Drawing.Size(139, 41);
+            this.btnSearchDates.TabIndex = 2;
+            this.btnSearchDates.Text = "Search";
+            this.btnSearchDates.UseVisualStyleBackColor = true;
+            this.btnSearchDates.Click += new System.EventHandler(this.btnSearchDates_Click);
+            // 
+            // tbSearchDates
+            // 
+            this.tbSearchDates.Location = new System.Drawing.Point(6, 112);
+            this.tbSearchDates.Name = "tbSearchDates";
+            this.tbSearchDates.Size = new System.Drawing.Size(339, 22);
+            this.tbSearchDates.TabIndex = 3;
+            // 
+            // btnClearDates
+            // 
+            this.btnClearDates.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClearDates.Location = new System.Drawing.Point(206, 282);
+            this.btnClearDates.Name = "btnClearDates";
+            this.btnClearDates.Size = new System.Drawing.Size(139, 41);
+            this.btnClearDates.TabIndex = 4;
+            this.btnClearDates.Text = "Clear data";
+            this.btnClearDates.UseVisualStyleBackColor = true;
+            this.btnClearDates.Click += new System.EventHandler(this.btnClearDates_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -241,13 +297,15 @@
             this.Controls.Add(this.tcLowHigh);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "52 week highs and lows";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tcLowHigh.ResumeLayout(false);
             this.tabMinHigh.ResumeLayout(false);
             this.tabMinHigh.PerformLayout();
             this.tabStock.ResumeLayout(false);
             this.tabStock.PerformLayout();
+            this.tabSearchDates.ResumeLayout(false);
+            this.tabSearchDates.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -258,20 +316,25 @@
         private System.Windows.Forms.TabPage tabMinHigh;
         private System.Windows.Forms.TabPage tabStock;
         private System.Windows.Forms.RichTextBox rtbResult;
-        private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.TextBox tbMonths;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lbName;
         private System.Windows.Forms.TextBox tbStockName;
         private System.Windows.Forms.RichTextBox rtbOneStock;
-        private System.Windows.Forms.Button btnData;
+        private System.Windows.Forms.Button btnGetData;
         private System.Windows.Forms.Button btnClear;
-        private System.Windows.Forms.Button btnUpdateLow;
         private System.Windows.Forms.Label lblHighPrice;
         private System.Windows.Forms.Label lblLowPrice;
         private System.Windows.Forms.Label lblHigh;
         private System.Windows.Forms.Label lblLow;
         private System.Windows.Forms.ProgressBar progressBar;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TabPage tabSearchDates;
+        private System.Windows.Forms.TextBox tbSearchDates;
+        private System.Windows.Forms.Button btnSearchDates;
+        private System.Windows.Forms.RichTextBox rtbHighLowDates;
+        private System.Windows.Forms.Label labelSearchDates;
+        private System.Windows.Forms.Button btnClearDates;
     }
 }
 

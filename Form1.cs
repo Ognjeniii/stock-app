@@ -21,10 +21,8 @@ namespace FicaTestiranje
             InitializeComponent();
         }
 
-        static string pathHigh = @"C:\Users\Ogi\Desktop\High.txt";
-        static string pathLow = @"C:\Users\Ogi\Desktop\Low.txt";
-
-        StockData stock = new StockData();
+        static string pathHigh = @"C:\Users\Ogi\Desktop\HighTest.txt";
+        static string pathLow = @"C:\Users\Ogi\Desktop\LowTest.txt";
 
         DateTime startDate = DateTime.Today.AddDays(-1);
         DateTime endDate = DateTime.Today;
@@ -39,37 +37,16 @@ namespace FicaTestiranje
             rtbResult.Text += "Stocks that achieved 52 week high and 52 week low price today: \n";
 
             progressBar.Maximum = numOfLines;
+            progressBar.Value = 0;
+            progressBar.Minimum = 0;
 
             DateTime t = DateTime.Now;
 
-            await StockData.getH(pathHigh, rtbResult, startDate, endDate);
-
-            //string s = await StockData.callBothMethods(pathHigh, pathLow, startDate, endDate, rtbResult, progressBar, lblHighPrice);
-
-            //await StockData.readHigh(pathHigh, startDate, endDate, rtbResult, progressBar, lblHighPrice);
-            //await StockData.readLow(pathLow, startDate, endDate, rtbResult, progressBar, lblLowPrice);
-
-            //int highPrice = Int32.Parse(lblHighPrice.Text);
-            //int lowPrice = Int32.Parse(lblLowPrice.Text);
+            await StockData.callBothMethods(pathHigh, pathLow, startDate, endDate, rtbResult, progressBar, lblHighPrice, lblLowPrice);
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            DialogResult dialogResult = MessageBox.Show
-                (
-                "Are you sure that you want to update all 52 week high prices?",
-                "Update file",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-                );
-
-            if (dialogResult == DialogResult.Yes)
-            {
-                StockData.updateHighFile(pathHigh, startDate, endDate);
-            }
-        }
-
-        private void btnData_Click(object sender, EventArgs e)
+       
+        private void btnGetData_Click(object sender, EventArgs e)
         {
             if (tbMonths.Text != string.Empty && tbStockName.Text != string.Empty)
             {
@@ -110,20 +87,17 @@ namespace FicaTestiranje
             rtbOneStock.Clear();
         }
 
-        private void btnUpdateLow_Click(object sender, EventArgs e)
+        private void btnSearchDates_Click(object sender, EventArgs e)
         {
-            DialogResult dialogResult = MessageBox.Show
-                (
-                "Are you sure that you want to update all 52 week low prices?",
-                "Update file",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Question
-                );
+            string inputDate = tbSearchDates.Text;
+            tbSearchDates.Text = string.Empty;
 
-            if (dialogResult == DialogResult.Yes)
-            {
-                StockData.updateLowFile(pathLow, startDate, endDate);
-            }
+            DatesFile.searchForDate(inputDate, rtbHighLowDates);
+        }
+
+        private void btnClearDates_Click(object sender, EventArgs e)
+        {
+            rtbHighLowDates.Clear();
         }
     }
 }

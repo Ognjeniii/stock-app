@@ -15,7 +15,6 @@ namespace FicaTestiranje
     {
         // Proveri da li se trenutni datum nalazi u fajlovima, ako se nalazi, ne treba da se pozove funkcija za ispis.
         // ako ne postoji, trebalo bi da se automatski pozove f-ja, i da se ispise u fajl.
-        //EMP
         public static async void getStockData(string symbol, DateTime startTime, DateTime endDate, RichTextBox rtb)
         {
             try
@@ -25,10 +24,12 @@ namespace FicaTestiranje
                 var security = await Yahoo.Symbols(symbol).Fields(Field.LongName).QueryAsync();
                 var ticker = security[symbol];
                 var companyName = ticker[Field.LongName];
-                rtb.Text += "  " + companyName + "" + "\n";
+                //var highVal = ticker[Field.FiftyTwoWeekHigh];
+
+                rtb.Text += "  " + companyName + "\n";
                 for (int i = 0; i < historicData.Count; i++)
                 {
-                    
+
                     rtb.Text +=
                         "\n"
                         + "Closing price on "
@@ -36,7 +37,6 @@ namespace FicaTestiranje
                         + historicData.ElementAt(i).DateTime.Month + "/"
                         + historicData.ElementAt(i).DateTime.Year +
                         ": $" + Math.Round(historicData.ElementAt(i).Close, 2);
-                    // ovde vidi sta jos treba od podataka
                 }
             }
             catch (Exception ex)
@@ -46,36 +46,24 @@ namespace FicaTestiranje
 
         }
 
-        public static async Task getH(string path, RichTextBox rtb, DateTime startDate, DateTime endDate)
-        {
-            List<string> linesList = File.ReadAllLines(path).ToList();
-
-            for(int i = 0; i < linesList.Count; i++)
-            {
-                string nameOfStock = linesList[i].Substring(0, linesList[i].IndexOf(":"));
-
-                var h = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
-                decimal currHigh = Math.Round(h.ElementAt(0).High, 2);
-
-                rtb.Text += "\nHIGH: " + nameOfStock + ":  " + currHigh + " $";
-            }
-        }
-
         public static async Task<int> readHigh(string path, DateTime startDate, DateTime endDate, RichTextBox rtb, ProgressBar bar, Label lbl)
         {
             int highConter = 0;
             List<string> linesList = File.ReadAllLines(path).ToList();
-
-            bar.Value = 0;
-            bar.Minimum = 0;
 
             for (int i = 0; i < linesList.Count; i++)
             {
                 try
                 {
                     string nameOfStock = linesList[i].Substring(0, linesList[i].IndexOf(":"));
-
                     var h = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
+
+                    //var security = await Yahoo.Symbols(nameOfStock).Fields(Field.LongName).QueryAsync();
+                    //var ticker = security[nameOfStock];
+
+                    //var highVal = ticker[Field.FiftyTwoWeekLow];
+                    //rtb.Text += "\t" + highVal;
+
                     decimal currHigh = Math.Round(h.ElementAt(0).High, 2);
 
                     string oldHighValueStr = linesList[i].Substring(linesList[i].IndexOf(" ") + 1);
@@ -85,16 +73,57 @@ namespace FicaTestiranje
                     {
                         rtb.Text += "\nHIGH: " + nameOfStock + ":  " + currHigh + " $";
                         highConter++;
+
+                        //linesList[i] = nameOfStock + ": " + currHigh;
+                        //File.WriteAllLines((path), linesList.ToArray());
                     }
                     bar.Value++;
                 } catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    rtb.Text += "\n" + ex.Message;
                 }
             }
             lbl.Text = highConter.ToString();
 
             return highConter;
+        }
+
+        public static async Task<int> readLow(string path, DateTime startDate, DateTime endDate, RichTextBox rtb, ProgressBar bar, Label lbl)
+        {
+            int lowCounter = 0;
+            List<string> linesList = File.ReadAllLines(path).ToList();
+
+            for (int i = 0; i < linesList.Count; i++)
+            {
+                try
+                {
+                    string nameOfStock = linesList[i].Substring(0, linesList[i].IndexOf(":"));
+
+                    var h = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
+                    decimal currLow = Math.Round(h.ElementAt(0).Low, 2);
+
+                    string oldLowValueS = linesList[i].Substring(linesList[i].IndexOf(" ") + 1);
+                    decimal oldLowValue = Convert.ToDecimal(oldLowValueS);
+
+                    if (currLow < oldLowValue)
+                    {
+                        rtb.Text += "\nLOW: " + nameOfStock + ":  " + currLow + " $";
+                        lowCounter++;
+
+                        //linesList[i] = nameOfStock + ": " + currLow;
+                        //File.WriteAllLines((path), linesList.ToArray());
+                    }
+                    bar.Value++;
+                }
+                catch (Exception ex)
+                {
+                    rtb.Text += "\n" + ex.Message;
+                }
+            }
+
+            lbl.Text = lowCounter.ToString();
+
+            return lowCounter;
         }
 
         public static async void updateHighFile(string path, DateTime startDate, DateTime endDate)
@@ -107,45 +136,15 @@ namespace FicaTestiranje
                 var historicData = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
                 decimal currHigh = Math.Round(historicData.ElementAt(0).High, 2);
 
-                //decimal currHigh = await getOneHigh(nameOfStock, startDate, endDate);
                 string oldHighValueS = linesList[i].Substring(linesList[i].IndexOf(" ") + 1);
                 decimal oldHighValue = Convert.ToDecimal(oldHighValueS);
+
                 if (currHigh > oldHighValue)
                 {
                     linesList[i] = nameOfStock + ": " + currHigh;
                     File.WriteAllLines((path), linesList.ToArray());
                 }
             }
-        }
-
-        public static async Task<int> readLow(string path, DateTime startDate, DateTime endDate, RichTextBox rtb, ProgressBar bar, Label lbl)
-        {
-            int lowCounter = 0;
-            List<string> linesList = File.ReadAllLines(path).ToList();
-            bar.Value = 0;
-            bar.Minimum = 0;
-
-            for (int i = 0; i < linesList.Count; i++)
-            {
-                string nameOfStock = linesList[i].Substring(0, linesList[i].IndexOf(":"));
-
-                var h = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
-                decimal currLow = Math.Round(h.ElementAt(0).Low, 2);
-
-                string oldLowValueS = linesList[i].Substring(linesList[i].IndexOf(" ") + 1);
-                decimal oldLowValue = Convert.ToDecimal(oldLowValueS);
-
-                if (currLow < oldLowValue)
-                {
-                    //rtb.ForeColor = Color.Red;
-                    rtb.Text += "\nLOW: " + nameOfStock + ":  " + currLow + " $";
-                    lowCounter++;
-                }
-                bar.Value++;
-            }
-            lbl.Text = lowCounter.ToString();
-
-            return lowCounter;
         }
 
         public static async void updateLowFile(string path, DateTime startDate, DateTime endDate)
@@ -169,34 +168,34 @@ namespace FicaTestiranje
             }
         }
 
-        public static async Task<string> callBothMethods(string pathHigh, string pathLow, DateTime startDate, DateTime endDate, RichTextBox rtb, ProgressBar bar, Label lbl)
+        public static async Task callBothMethods(string pathHigh, string pathLow, DateTime startDate, DateTime endDate, RichTextBox rtb, ProgressBar bar, Label lblhigh, Label lbllow)
         {
-            int hPrices = await readHigh(pathHigh, startDate, endDate, rtb, bar, lbl);
-            int lPrices = await readLow(pathLow, startDate, endDate, rtb, bar, lbl);
+            Task<int> highTask = readHigh(pathHigh, startDate, endDate, rtb, bar, lblhigh);
+            Task<int> lowTask = readLow(pathLow, startDate, endDate, rtb, bar, lbllow);
 
-            DateTime dateTime = DateTime.Now;
+            await Task.WhenAll(highTask, lowTask);
 
-            return dateTime.ToString("d") + " - high: " + hPrices + ", low: " + lPrices;
+            int hPrices = highTask.Result;
+            int lPrices = lowTask.Result;
+
+            DatesFile.writeHighLow(hPrices, lPrices);
         }
-        
 
         #region Metode za upis u fajlove
+
         public async Task<int> getLowPrice(string symbol, DateTime startDate, DateTime endDate)
         {
             try
             {
                 var historicData = await Yahoo.GetHistoricalAsync(symbol, startDate, endDate);
-                var security = await Yahoo.Symbols(symbol).Fields(Field.LongName).QueryAsync();
-                var ticker = security[symbol];
-                var companyName = ticker[Field.LongName];
 
                 List<decimal> prices = new List<decimal>();
 
                 for (int i = 0; i < historicData.Count; i++)
                 {
-                    //Console.WriteLine("Low price for company " + symbol + " is " + historicData.ElementAt(i).Low);
                     prices.Add(historicData.ElementAt(i).Low);
                 }
+
                 decimal lowPrice = Math.Round(prices.Min(), 3);
 
                 string path = @"C:\Users\Ogi\Desktop\Low.txt";
@@ -217,8 +216,8 @@ namespace FicaTestiranje
                 var security = await Yahoo.Symbols(symbol).Fields(Field.LongName).QueryAsync();
                 var ticker = security[symbol];
                 var companyName = ticker[Field.LongName];
-
                 List<decimal> prices = new List<decimal>();
+
 
                 for (int i = 0; i < historicData.Count; i++)
                 {
@@ -235,6 +234,7 @@ namespace FicaTestiranje
             }
             return 1;
         }
+
         #endregion
 
     }
