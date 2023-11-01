@@ -13,8 +13,6 @@ namespace FicaTestiranje
 {
     public class StockData
     {
-        // Proveri da li se trenutni datum nalazi u fajlovima, ako se nalazi, ne treba da se pozove funkcija za ispis.
-        // ako ne postoji, trebalo bi da se automatski pozove f-ja, i da se ispise u fajl.
         public static async void getStockData(string symbol, DateTime startTime, DateTime endDate, RichTextBox rtb)
         {
             try
@@ -58,11 +56,10 @@ namespace FicaTestiranje
                     string nameOfStock = linesList[i].Substring(0, linesList[i].IndexOf(":"));
                     var h = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
 
-                    //var security = await Yahoo.Symbols(nameOfStock).Fields(Field.LongName).QueryAsync();
-                    //var ticker = security[nameOfStock];
-
-                    //var highVal = ticker[Field.FiftyTwoWeekLow];
-                    //rtb.Text += "\t" + highVal;
+                    var securities = await Yahoo.Symbols(nameOfStock).Fields(Field.Symbol, Field.FiftyTwoWeekHigh).QueryAsync();
+                    var ticker = securities[nameOfStock];
+                    var s = ticker[Field.FiftyTwoWeekHigh];
+                    MessageBox.Show("For " + nameOfStock + " 52 h: " + s);
 
                     decimal currHigh = Math.Round(h.ElementAt(0).High, 2);
 
@@ -181,61 +178,60 @@ namespace FicaTestiranje
             DatesFile.writeHighLow(hPrices, lPrices);
         }
 
-        #region Metode za upis u fajlove
 
-        public async Task<int> getLowPrice(string symbol, DateTime startDate, DateTime endDate)
+        #region optimizacija
+
+        private static async Task<List<string>> ReadAllLinesAsync(string path)
         {
-            try
+            using (var reader = new StreamReader(path))
             {
-                var historicData = await Yahoo.GetHistoricalAsync(symbol, startDate, endDate);
-
-                List<decimal> prices = new List<decimal>();
-
-                for (int i = 0; i < historicData.Count; i++)
+                var linesList = new List<string>();
+                while (!reader.EndOfStream)
                 {
-                    prices.Add(historicData.ElementAt(i).Low);
+                    linesList.Add(await reader.ReadLineAsync());
                 }
-
-                decimal lowPrice = Math.Round(prices.Min(), 3);
-
-                string path = @"C:\Users\Ogi\Desktop\Low.txt";
-                File.AppendAllText(path, symbol + ": " + lowPrice + "\n");
+                return linesList;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("\t" + ex.Message);
-            }
-            return 1;
         }
 
-        public async Task<int> getHighPrice(string symbol, DateTime startDate, DateTime endDate)
+        public static async Task HighAndLowToday(string path)
         {
-            try
+            List<string> lines = await ReadAllLinesAsync(path);
+            int sumOfHighs = 0;
+            int sumOfLows = 0;
+
+            foreach (var line in lines)
             {
-                var historicData = await Yahoo.GetHistoricalAsync(symbol, startDate, endDate);
-                var security = await Yahoo.Symbols(symbol).Fields(Field.LongName).QueryAsync();
+                string symbol = line.Substring(0, line.IndexOf(' '));
+
+                string subHigh = line.Substring(line.IndexOf(':') + 1);
+                string Highstr = subHigh.Substring(0, subHigh.IndexOf(' '));
+                string Lowstr = line.Substring(line.LastIndexOf(':') + 1);
+
+                decimal oldHigh = Convert.ToDecimal(Highstr);
+                decimal oldLow = Convert.ToDecimal(Lowstr);
+
+                var security = await Yahoo.Symbols(symbol).Fields(Field.FiftyTwoWeekHigh, Field.FiftyTwoWeekLow).QueryAsync();
                 var ticker = security[symbol];
-                var companyName = ticker[Field.LongName];
-                List<decimal> prices = new List<decimal>();
+                var currHigh = ticker[Field.FiftyTwoWeekHigh];
+                var currLow = ticker[Field.FiftyTwoWeekLow];
 
-
-                for (int i = 0; i < historicData.Count; i++)
+                if(oldHigh < currHigh)
                 {
-                    prices.Add(historicData.ElementAt(i).High);
+                    sumOfHighs++;
                 }
-                decimal highPrice = Math.Round(prices.Max(), 3);
 
-                string path = @"C:\Users\Ogi\Desktop\High.txt";
-                File.AppendAllText(path, symbol + ": " + highPrice + "\n");
+                if(oldLow > currLow)
+                {
+                    sumOfLows++;
+                }
+
+
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("\t" + ex.Message);
-            }
-            return 1;
         }
 
         #endregion
+
 
     }
 }

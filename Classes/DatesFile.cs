@@ -23,7 +23,7 @@ namespace FicaTestiranje
 
             if (!dates.Contains(line))
             {
-                File.AppendAllText(path, line + "\n");
+                File.AppendAllText(path, "\n" + line);
             }
         }
 
@@ -35,8 +35,7 @@ namespace FicaTestiranje
             {
                 if (line.StartsWith(date))
                 {
-                    string lh = line.Substring(date.Length + 1);
-                    rtb.Text += "\nFor date " + date + ": \n" + lh + "\n";
+                    rtb.Text += "\nFor date " + date + ": \n" + line + "\n";
                     return;
                 }
             }

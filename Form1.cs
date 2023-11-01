@@ -21,8 +21,9 @@ namespace FicaTestiranje
             InitializeComponent();
         }
 
-        static string pathHigh = @"C:\Users\Ogi\Desktop\HighTest.txt";
-        static string pathLow = @"C:\Users\Ogi\Desktop\LowTest.txt";
+        static string pathHigh = @"C:\Users\Ogi\Desktop\Stock\High.txt";
+        static string pathLow = @"C:\Users\Ogi\Desktop\Stock\Low.txt";
+        static string lowHighPath = @"C:\Users\Ogi\Desktop\Stock\HighsAndLows.txt";
 
         DateTime startDate = DateTime.Today.AddDays(-1);
         DateTime endDate = DateTime.Today;
@@ -31,6 +32,7 @@ namespace FicaTestiranje
         static int numOfLinesLow = File.ReadAllLines(pathLow).Count();
 
         static int numOfLines = numOfLinesHigh + numOfLinesLow;
+
 
         private async void Form1_Load(object sender, EventArgs e)
         {
@@ -42,7 +44,9 @@ namespace FicaTestiranje
 
             DateTime t = DateTime.Now;
 
-            await StockData.callBothMethods(pathHigh, pathLow, startDate, endDate, rtbResult, progressBar, lblHighPrice, lblLowPrice);
+            await StockData.HighAndLowToday(lowHighPath);
+
+            //await StockData.callBothMethods(pathHigh, pathLow, startDate, endDate, rtbResult, progressBar, lblHighPrice, lblLowPrice);
         }
 
        
