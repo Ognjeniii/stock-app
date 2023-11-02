@@ -194,7 +194,7 @@ namespace FicaTestiranje
             }
         }
 
-        public static async Task HighAndLowToday(string path)
+        public static async Task HighAndLowToday(string path, ProgressBar bar, Label lblHighPrice, Label lblLowPrice, RichTextBox rtb)
         {
             List<string> lines = await ReadAllLinesAsync(path);
             int sumOfHighs = 0;
@@ -202,32 +202,48 @@ namespace FicaTestiranje
 
             foreach (var line in lines)
             {
-                string symbol = line.Substring(0, line.IndexOf(' '));
-
-                string subHigh = line.Substring(line.IndexOf(':') + 1);
-                string Highstr = subHigh.Substring(0, subHigh.IndexOf(' '));
-                string Lowstr = line.Substring(line.LastIndexOf(':') + 1);
-
-                decimal oldHigh = Convert.ToDecimal(Highstr);
-                decimal oldLow = Convert.ToDecimal(Lowstr);
-
-                var security = await Yahoo.Symbols(symbol).Fields(Field.FiftyTwoWeekHigh, Field.FiftyTwoWeekLow).QueryAsync();
-                var ticker = security[symbol];
-                var currHigh = ticker[Field.FiftyTwoWeekHigh];
-                var currLow = ticker[Field.FiftyTwoWeekLow];
-
-                if(oldHigh < currHigh)
+                try
                 {
-                    sumOfHighs++;
+                    string symbol = line.Substring(0, line.IndexOf(' '));
+
+                    string subHigh = line.Substring(line.IndexOf(':') + 1);
+                    string Highstr = subHigh.Substring(0, subHigh.IndexOf(' '));
+                    string Lowstr = line.Substring(line.LastIndexOf(':') + 1);
+
+                    double oldHigh = Convert.ToDouble(Highstr);
+                    double oldLow = Convert.ToDouble(Lowstr);
+
+                    var security = await Yahoo.Symbols(symbol).Fields(Field.FiftyTwoWeekHigh, Field.FiftyTwoWeekLow).QueryAsync();
+                    var ticker = security[symbol];
+
+                    var currHigh = ticker[Field.FiftyTwoWeekHigh];
+                    var currLow = ticker[Field.FiftyTwoWeekLow];
+
+                    if (oldHigh < currHigh)
+                    {
+                        sumOfHighs++;
+                        rtb.Text += "\nHigh for: " + symbol + " = " + currHigh;
+                    }
+
+                    if (oldLow > currLow)
+                    {
+                        sumOfLows++;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    rtb.Text += "\n\t" + ex.Message;
                 }
 
-                if(oldLow > currLow)
-                {
-                    sumOfLows++;
-                }
-
+                bar.Value++;
 
             }
+
+
+            DatesFile.writeHighLow(sumOfHighs, sumOfLows);
+
+            lblHighPrice.Text = sumOfHighs.ToString();
+            lblLowPrice.Text = sumOfLows.ToString();
         }
 
         #endregion

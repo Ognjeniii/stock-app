@@ -10,7 +10,7 @@ namespace FicaTestiranje
 {
     public class DatesFile
     {
-        static string path = $"C:/Users/Ogi/Desktop/Dates.txt";
+        static string path = $"C:/Users/Ogi/Desktop/Stock/Dates.txt";
 
         public static void writeHighLow(int hPrices, int lPrices)
         {

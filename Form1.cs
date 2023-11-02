@@ -28,10 +28,10 @@ namespace FicaTestiranje
         DateTime startDate = DateTime.Today.AddDays(-1);
         DateTime endDate = DateTime.Today;
 
-        static int numOfLinesHigh = File.ReadAllLines(pathHigh).Count();
-        static int numOfLinesLow = File.ReadAllLines(pathLow).Count();
+        //static int numOfLinesHigh = File.ReadAllLines(pathHigh).Count();
+        //static int numOfLinesLow = File.ReadAllLines(pathLow).Count();
 
-        static int numOfLines = numOfLinesHigh + numOfLinesLow;
+        static int numOfLines = File.ReadAllLines(lowHighPath).Count();
 
 
         private async void Form1_Load(object sender, EventArgs e)
@@ -44,7 +44,7 @@ namespace FicaTestiranje
 
             DateTime t = DateTime.Now;
 
-            await StockData.HighAndLowToday(lowHighPath);
+            await StockData.HighAndLowToday(lowHighPath, progressBar, lblHighPrice, lblLowPrice, rtbResult);
 
             //await StockData.callBothMethods(pathHigh, pathLow, startDate, endDate, rtbResult, progressBar, lblHighPrice, lblLowPrice);
         }
