@@ -200,15 +200,15 @@ namespace FicaTestiranje
             int sumOfHighs = 0;
             int sumOfLows = 0;
 
-            foreach (var line in lines)
+            for(var i = 0; i < lines.Count; i++)
             {
                 try
                 {
-                    string symbol = line.Substring(0, line.IndexOf(' '));
+                    string symbol = lines[i].Substring(0, lines[i].IndexOf(' '));
 
-                    string subHigh = line.Substring(line.IndexOf(':') + 1);
+                    string subHigh = lines[i].Substring(lines[i].IndexOf(':') + 1);
                     string Highstr = subHigh.Substring(0, subHigh.IndexOf(' '));
-                    string Lowstr = line.Substring(line.LastIndexOf(':') + 1);
+                    string Lowstr = lines[i].Substring(lines[i].LastIndexOf(':') + 1);
 
                     double oldHigh = Convert.ToDouble(Highstr);
                     double oldLow = Convert.ToDouble(Lowstr);
@@ -219,26 +219,39 @@ namespace FicaTestiranje
                     var currHigh = ticker[Field.FiftyTwoWeekHigh];
                     var currLow = ticker[Field.FiftyTwoWeekLow];
 
-                    if (oldHigh < currHigh)
+                    if (oldHigh < currHigh && oldLow < currLow)
                     {
                         sumOfHighs++;
                         rtb.Text += "\nHigh for: " + symbol + " = " + currHigh;
+                        lines[i] = symbol + " - high:" + currHigh + " low:" + oldLow;
+                        File.WriteAllLines((path), lines.ToArray());
                     }
 
-                    if (oldLow > currLow)
+                    else if (oldLow > currLow && oldHigh > currHigh)
                     {
                         sumOfLows++;
+                        rtb.Text += "\nLow for: " + symbol + " = " + currLow;
+                        lines[i] = symbol + " - high:" + oldHigh + " low:" + currLow;
+                        File.WriteAllLines((path), lines.ToArray());
                     }
-                }
-                catch(Exception ex)
-                {
-                    rtb.Text += "\n\t" + ex.Message;
-                }
 
-                bar.Value++;
-
+                    else if(oldLow > currLow && oldHigh < currHigh)
+                    {
+                        sumOfHighs++;
+                        sumOfLows++;
+                        rtb.Text += "\nFor: " + symbol + " new high price: " + currHigh + ", and new low price: " + currLow;
+                        lines[i] = symbol + " - high:" + currHigh + " low:" + currLow;
+                        File.WriteAllLines((path), lines.ToArray());
+                    }
+            }
+                catch (Exception ex)
+            {
+                rtb.Text += "\n\t" + ex.Message;
             }
 
+            bar.Value++;
+
+            }
 
             DatesFile.writeHighLow(sumOfHighs, sumOfLows);
 
