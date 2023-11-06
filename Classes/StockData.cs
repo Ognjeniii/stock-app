@@ -39,147 +39,10 @@ namespace FicaTestiranje
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
         }
-
-        public static async Task<int> readHigh(string path, DateTime startDate, DateTime endDate, RichTextBox rtb, ProgressBar bar, Label lbl)
-        {
-            int highConter = 0;
-            List<string> linesList = File.ReadAllLines(path).ToList();
-
-            for (int i = 0; i < linesList.Count; i++)
-            {
-                try
-                {
-                    string nameOfStock = linesList[i].Substring(0, linesList[i].IndexOf(":"));
-                    var h = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
-
-                    var securities = await Yahoo.Symbols(nameOfStock).Fields(Field.Symbol, Field.FiftyTwoWeekHigh).QueryAsync();
-                    var ticker = securities[nameOfStock];
-                    var s = ticker[Field.FiftyTwoWeekHigh];
-                    MessageBox.Show("For " + nameOfStock + " 52 h: " + s);
-
-                    decimal currHigh = Math.Round(h.ElementAt(0).High, 2);
-
-                    string oldHighValueStr = linesList[i].Substring(linesList[i].IndexOf(" ") + 1);
-                    decimal oldHighValue = Convert.ToDecimal(oldHighValueStr);
-
-                    if (currHigh > oldHighValue)
-                    {
-                        rtb.Text += "\nHIGH: " + nameOfStock + ":  " + currHigh + " $";
-                        highConter++;
-
-                        //linesList[i] = nameOfStock + ": " + currHigh;
-                        //File.WriteAllLines((path), linesList.ToArray());
-                    }
-                    bar.Value++;
-                } catch (Exception ex)
-                {
-                    rtb.Text += "\n" + ex.Message;
-                }
-            }
-            lbl.Text = highConter.ToString();
-
-            return highConter;
-        }
-
-        public static async Task<int> readLow(string path, DateTime startDate, DateTime endDate, RichTextBox rtb, ProgressBar bar, Label lbl)
-        {
-            int lowCounter = 0;
-            List<string> linesList = File.ReadAllLines(path).ToList();
-
-            for (int i = 0; i < linesList.Count; i++)
-            {
-                try
-                {
-                    string nameOfStock = linesList[i].Substring(0, linesList[i].IndexOf(":"));
-
-                    var h = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
-                    decimal currLow = Math.Round(h.ElementAt(0).Low, 2);
-
-                    string oldLowValueS = linesList[i].Substring(linesList[i].IndexOf(" ") + 1);
-                    decimal oldLowValue = Convert.ToDecimal(oldLowValueS);
-
-                    if (currLow < oldLowValue)
-                    {
-                        rtb.Text += "\nLOW: " + nameOfStock + ":  " + currLow + " $";
-                        lowCounter++;
-
-                        //linesList[i] = nameOfStock + ": " + currLow;
-                        //File.WriteAllLines((path), linesList.ToArray());
-                    }
-                    bar.Value++;
-                }
-                catch (Exception ex)
-                {
-                    rtb.Text += "\n" + ex.Message;
-                }
-            }
-
-            lbl.Text = lowCounter.ToString();
-
-            return lowCounter;
-        }
-
-        public static async void updateHighFile(string path, DateTime startDate, DateTime endDate)
-        {
-            List<string> linesList = File.ReadAllLines(path).ToList();
-            for (int i = 0; i < linesList.Count; i++)
-            {
-                string nameOfStock = linesList[i].Substring(0, linesList[i].IndexOf(":"));
-
-                var historicData = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
-                decimal currHigh = Math.Round(historicData.ElementAt(0).High, 2);
-
-                string oldHighValueS = linesList[i].Substring(linesList[i].IndexOf(" ") + 1);
-                decimal oldHighValue = Convert.ToDecimal(oldHighValueS);
-
-                if (currHigh > oldHighValue)
-                {
-                    linesList[i] = nameOfStock + ": " + currHigh;
-                    File.WriteAllLines((path), linesList.ToArray());
-                }
-            }
-        }
-
-        public static async void updateLowFile(string path, DateTime startDate, DateTime endDate)
-        {
-            List<string> linesList = File.ReadAllLines(path).ToList();
-            for (int i = 0; i < linesList.Count; i++)
-            {
-                string nameOfStock = linesList[i].Substring(0, linesList[i].IndexOf(":"));
-
-                var historicData = await Yahoo.GetHistoricalAsync(nameOfStock, startDate, endDate);
-                decimal currLow = Math.Round(historicData.ElementAt(0).Low, 2);
-
-                //decimal currLow = await getOneHigh(nameOfStock, startDate, endDate);
-                string oldLowValueS = linesList[i].Substring(linesList[i].IndexOf(" ") + 1);
-                decimal oldLowValue = Convert.ToDecimal(oldLowValueS);
-                if (currLow < oldLowValue)
-                {
-                    linesList[i] = nameOfStock + ": " + currLow;
-                    File.WriteAllLines((path), linesList.ToArray());
-                }
-            }
-        }
-
-        public static async Task callBothMethods(string pathHigh, string pathLow, DateTime startDate, DateTime endDate, RichTextBox rtb, ProgressBar bar, Label lblhigh, Label lbllow)
-        {
-            Task<int> highTask = readHigh(pathHigh, startDate, endDate, rtb, bar, lblhigh);
-            Task<int> lowTask = readLow(pathLow, startDate, endDate, rtb, bar, lbllow);
-
-            await Task.WhenAll(highTask, lowTask);
-
-            int hPrices = highTask.Result;
-            int lPrices = lowTask.Result;
-
-            DatesFile.writeHighLow(hPrices, lPrices);
-        }
-
-
-        #region optimizacija
 
         private static async Task<List<string>> ReadAllLinesAsync(string path)
         {
@@ -259,7 +122,53 @@ namespace FicaTestiranje
             lblLowPrice.Text = sumOfLows.ToString();
         }
 
-        #endregion
+        public static async Task UpdateFile (string path)
+        {
+            List<string> lines = await ReadAllLinesAsync(path);
+
+            for (var i = 0; i < lines.Count; i++)
+            {
+                try
+                {
+                    string symbol = lines[i].Substring(0, lines[i].IndexOf(' '));
+
+                    string subHigh = lines[i].Substring(lines[i].IndexOf(':') + 1);
+                    string Highstr = subHigh.Substring(0, subHigh.IndexOf(' '));
+                    string Lowstr = lines[i].Substring(lines[i].LastIndexOf(':') + 1);
+
+                    double oldHigh = Convert.ToDouble(Highstr);
+                    double oldLow = Convert.ToDouble(Lowstr);
+
+                    var security = await Yahoo.Symbols(symbol).Fields(Field.FiftyTwoWeekHigh, Field.FiftyTwoWeekLow).QueryAsync();
+                    var ticker = security[symbol];
+
+                    var currHigh = ticker[Field.FiftyTwoWeekHigh];
+                    var currLow = ticker[Field.FiftyTwoWeekLow];
+
+                    if (oldHigh < currHigh && oldLow < currLow)
+                    {
+                        lines[i] = symbol + " - high:" + currHigh + " low:" + oldLow;
+                        File.WriteAllLines((path), lines.ToArray());
+                    }
+
+                    else if (oldLow > currLow && oldHigh > currHigh)
+                    {
+                        lines[i] = symbol + " - high:" + oldHigh + " low:" + currLow;
+                        File.WriteAllLines((path), lines.ToArray());
+                    }
+
+                    else if (oldLow > currLow && oldHigh < currHigh)
+                    {
+                        lines[i] = symbol + " - high:" + currHigh + " low:" + currLow;
+                        File.WriteAllLines((path), lines.ToArray());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            }
+        }
 
 
     }

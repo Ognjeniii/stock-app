@@ -21,32 +21,15 @@ namespace FicaTestiranje
             InitializeComponent();
         }
 
-        static string pathHigh = @"C:\Users\Ogi\Desktop\Stock\High.txt";
-        static string pathLow = @"C:\Users\Ogi\Desktop\Stock\Low.txt";
-        static string lowHighPath = @"C:\Users\Ogi\Desktop\Stock\HighsAndLows.txt";
+        static string lowHighPath = @"C:\Users\Ogi\Desktop\Stock\Test.txt";
 
-        DateTime startDate = DateTime.Today.AddDays(-1);
         DateTime endDate = DateTime.Today;
-
-        //static int numOfLinesHigh = File.ReadAllLines(pathHigh).Count();
-        //static int numOfLinesLow = File.ReadAllLines(pathLow).Count();
 
         static int numOfLines = File.ReadAllLines(lowHighPath).Count();
 
-
         private async void Form1_Load(object sender, EventArgs e)
         {
-            rtbResult.Text += "Stocks that achieved 52 week high and 52 week low price today: \n";
-
-            progressBar.Maximum = numOfLines;
-            progressBar.Value = 0;
-            progressBar.Minimum = 0;
-
-            DateTime t = DateTime.Now;
-
-            await StockData.HighAndLowToday(lowHighPath, progressBar, lblHighPrice, lblLowPrice, rtbResult);
-
-            //await StockData.callBothMethods(pathHigh, pathLow, startDate, endDate, rtbResult, progressBar, lblHighPrice, lblLowPrice);
+            MessageBox.Show("If you didn't run application more than 1 day, you need to update HighsAndLow.txt file.");
         }
 
        
@@ -102,6 +85,49 @@ namespace FicaTestiranje
         private void btnClearDates_Click(object sender, EventArgs e)
         {
             rtbHighLowDates.Clear();
+        }
+
+        private async void btnGet52DataToday_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure that you want to retrieve new data?" +
+                "\nAll data will be changed in HighsAndLows.txt file." +
+                "\nHighs and lows on this day will be added to the file dates.",
+                "Yes/No",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+                );
+
+            if (result == DialogResult.Yes)
+            {
+                progressBar.Maximum = numOfLines;
+                progressBar.Value = 0;
+                progressBar.Minimum = 0;
+
+                rtbResult.Text += "\nStocks that achieved 52 week high and 52 week low price today:\n";
+                await StockData.HighAndLowToday(lowHighPath, progressBar, lblHighPrice, lblLowPrice, rtbResult);
+            }
+        }
+
+        private async void btnUpdateFile_Click(object sender, EventArgs e)
+        {
+            var result = MessageBox.Show("Are you sure that you want to update old 52 week highs and lows to today values?" +
+                "\nAll values will be changed in file HighsAndLows.txt",
+                "Update file",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    await StockData.UpdateFile(lowHighPath);
+                    MessageBox.Show("File updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

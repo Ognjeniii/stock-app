@@ -30,7 +30,8 @@
         {
             this.tcLowHigh = new System.Windows.Forms.TabControl();
             this.tabMinHigh = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnUpdateFile = new System.Windows.Forms.Button();
+            this.btnGet52DataToday = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.lblHighPrice = new System.Windows.Forms.Label();
             this.lblLowPrice = new System.Windows.Forms.Label();
@@ -46,11 +47,11 @@
             this.lbName = new System.Windows.Forms.Label();
             this.tbStockName = new System.Windows.Forms.TextBox();
             this.tabSearchDates = new System.Windows.Forms.TabPage();
-            this.labelSearchDates = new System.Windows.Forms.Label();
-            this.rtbHighLowDates = new System.Windows.Forms.RichTextBox();
-            this.btnSearchDates = new System.Windows.Forms.Button();
-            this.tbSearchDates = new System.Windows.Forms.TextBox();
             this.btnClearDates = new System.Windows.Forms.Button();
+            this.tbSearchDates = new System.Windows.Forms.TextBox();
+            this.btnSearchDates = new System.Windows.Forms.Button();
+            this.rtbHighLowDates = new System.Windows.Forms.RichTextBox();
+            this.labelSearchDates = new System.Windows.Forms.Label();
             this.tcLowHigh.SuspendLayout();
             this.tabMinHigh.SuspendLayout();
             this.tabStock.SuspendLayout();
@@ -70,7 +71,8 @@
             // 
             // tabMinHigh
             // 
-            this.tabMinHigh.Controls.Add(this.button1);
+            this.tabMinHigh.Controls.Add(this.btnUpdateFile);
+            this.tabMinHigh.Controls.Add(this.btnGet52DataToday);
             this.tabMinHigh.Controls.Add(this.progressBar);
             this.tabMinHigh.Controls.Add(this.lblHighPrice);
             this.tabMinHigh.Controls.Add(this.lblLowPrice);
@@ -85,14 +87,34 @@
             this.tabMinHigh.Text = "52 low and high prices";
             this.tabMinHigh.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnUpdateFile
             // 
-            this.button1.Location = new System.Drawing.Point(481, 273);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(282, 50);
-            this.button1.TabIndex = 8;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnUpdateFile.BackColor = System.Drawing.Color.Transparent;
+            this.btnUpdateFile.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.btnUpdateFile.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.btnUpdateFile.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUpdateFile.ForeColor = System.Drawing.Color.Black;
+            this.btnUpdateFile.Location = new System.Drawing.Point(480, 220);
+            this.btnUpdateFile.Margin = new System.Windows.Forms.Padding(0);
+            this.btnUpdateFile.Name = "btnUpdateFile";
+            this.btnUpdateFile.Size = new System.Drawing.Size(282, 50);
+            this.btnUpdateFile.TabIndex = 9;
+            this.btnUpdateFile.Text = "Update file";
+            this.btnUpdateFile.UseVisualStyleBackColor = false;
+            this.btnUpdateFile.Click += new System.EventHandler(this.btnUpdateFile_Click);
+            // 
+            // btnGet52DataToday
+            // 
+            this.btnGet52DataToday.BackColor = System.Drawing.Color.Chartreuse;
+            this.btnGet52DataToday.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGet52DataToday.ForeColor = System.Drawing.Color.Black;
+            this.btnGet52DataToday.Location = new System.Drawing.Point(480, 273);
+            this.btnGet52DataToday.Name = "btnGet52DataToday";
+            this.btnGet52DataToday.Size = new System.Drawing.Size(282, 50);
+            this.btnGet52DataToday.TabIndex = 8;
+            this.btnGet52DataToday.Text = "Get 52 week today";
+            this.btnGet52DataToday.UseVisualStyleBackColor = false;
+            this.btnGet52DataToday.Click += new System.EventHandler(this.btnGet52DataToday_Click);
             // 
             // progressBar
             // 
@@ -166,8 +188,8 @@
             // 
             // btnClear
             // 
-            this.btnClear.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClear.Location = new System.Drawing.Point(17, 217);
+            this.btnClear.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClear.Location = new System.Drawing.Point(17, 273);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(321, 50);
             this.btnClear.TabIndex = 6;
@@ -185,8 +207,8 @@
             // 
             // btnGetData
             // 
-            this.btnGetData.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnGetData.Location = new System.Drawing.Point(17, 273);
+            this.btnGetData.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGetData.Location = new System.Drawing.Point(17, 217);
             this.btnGetData.Name = "btnGetData";
             this.btnGetData.Size = new System.Drawing.Size(321, 50);
             this.btnGetData.TabIndex = 4;
@@ -196,7 +218,7 @@
             // 
             // tbMonths
             // 
-            this.tbMonths.Location = new System.Drawing.Point(17, 150);
+            this.tbMonths.Location = new System.Drawing.Point(17, 161);
             this.tbMonths.Name = "tbMonths";
             this.tbMonths.Size = new System.Drawing.Size(321, 22);
             this.tbMonths.TabIndex = 3;
@@ -204,7 +226,7 @@
             // label2
             // 
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(14, 99);
+            this.label2.Location = new System.Drawing.Point(14, 110);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(324, 48);
             this.label2.TabIndex = 2;
@@ -238,56 +260,56 @@
             this.tabSearchDates.Padding = new System.Windows.Forms.Padding(3);
             this.tabSearchDates.Size = new System.Drawing.Size(769, 331);
             this.tabSearchDates.TabIndex = 2;
-            this.tabSearchDates.Text = "Search dates";
+            this.tabSearchDates.Text = "Search for dates";
             this.tabSearchDates.UseVisualStyleBackColor = true;
             // 
-            // labelSearchDates
+            // btnClearDates
             // 
-            this.labelSearchDates.AutoSize = true;
-            this.labelSearchDates.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSearchDates.ForeColor = System.Drawing.Color.Black;
-            this.labelSearchDates.Location = new System.Drawing.Point(6, 76);
-            this.labelSearchDates.Name = "labelSearchDates";
-            this.labelSearchDates.Size = new System.Drawing.Size(282, 18);
-            this.labelSearchDates.TabIndex = 0;
-            this.labelSearchDates.Text = "Enter date for search in format \"d/m/y\":";
+            this.btnClearDates.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClearDates.Location = new System.Drawing.Point(20, 274);
+            this.btnClearDates.Name = "btnClearDates";
+            this.btnClearDates.Size = new System.Drawing.Size(325, 49);
+            this.btnClearDates.TabIndex = 4;
+            this.btnClearDates.Text = "Clear data";
+            this.btnClearDates.UseVisualStyleBackColor = true;
+            this.btnClearDates.Click += new System.EventHandler(this.btnClearDates_Click);
             // 
-            // rtbHighLowDates
+            // tbSearchDates
             // 
-            this.rtbHighLowDates.Location = new System.Drawing.Point(351, 16);
-            this.rtbHighLowDates.Name = "rtbHighLowDates";
-            this.rtbHighLowDates.Size = new System.Drawing.Size(408, 307);
-            this.rtbHighLowDates.TabIndex = 1;
-            this.rtbHighLowDates.Text = "";
+            this.tbSearchDates.Location = new System.Drawing.Point(20, 47);
+            this.tbSearchDates.Name = "tbSearchDates";
+            this.tbSearchDates.Size = new System.Drawing.Size(325, 22);
+            this.tbSearchDates.TabIndex = 3;
             // 
             // btnSearchDates
             // 
             this.btnSearchDates.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSearchDates.Location = new System.Drawing.Point(206, 140);
+            this.btnSearchDates.Location = new System.Drawing.Point(20, 219);
             this.btnSearchDates.Name = "btnSearchDates";
-            this.btnSearchDates.Size = new System.Drawing.Size(139, 41);
+            this.btnSearchDates.Size = new System.Drawing.Size(325, 49);
             this.btnSearchDates.TabIndex = 2;
             this.btnSearchDates.Text = "Search";
             this.btnSearchDates.UseVisualStyleBackColor = true;
             this.btnSearchDates.Click += new System.EventHandler(this.btnSearchDates_Click);
             // 
-            // tbSearchDates
+            // rtbHighLowDates
             // 
-            this.tbSearchDates.Location = new System.Drawing.Point(6, 112);
-            this.tbSearchDates.Name = "tbSearchDates";
-            this.tbSearchDates.Size = new System.Drawing.Size(339, 22);
-            this.tbSearchDates.TabIndex = 3;
+            this.rtbHighLowDates.Location = new System.Drawing.Point(362, 16);
+            this.rtbHighLowDates.Name = "rtbHighLowDates";
+            this.rtbHighLowDates.Size = new System.Drawing.Size(397, 307);
+            this.rtbHighLowDates.TabIndex = 1;
+            this.rtbHighLowDates.Text = "";
             // 
-            // btnClearDates
+            // labelSearchDates
             // 
-            this.btnClearDates.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClearDates.Location = new System.Drawing.Point(206, 282);
-            this.btnClearDates.Name = "btnClearDates";
-            this.btnClearDates.Size = new System.Drawing.Size(139, 41);
-            this.btnClearDates.TabIndex = 4;
-            this.btnClearDates.Text = "Clear data";
-            this.btnClearDates.UseVisualStyleBackColor = true;
-            this.btnClearDates.Click += new System.EventHandler(this.btnClearDates_Click);
+            this.labelSearchDates.AutoSize = true;
+            this.labelSearchDates.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSearchDates.ForeColor = System.Drawing.Color.Black;
+            this.labelSearchDates.Location = new System.Drawing.Point(17, 17);
+            this.labelSearchDates.Name = "labelSearchDates";
+            this.labelSearchDates.Size = new System.Drawing.Size(262, 18);
+            this.labelSearchDates.TabIndex = 0;
+            this.labelSearchDates.Text = "Enter date for search in format \"d/m/y\":";
             // 
             // Form1
             // 
@@ -328,13 +350,14 @@
         private System.Windows.Forms.Label lblHigh;
         private System.Windows.Forms.Label lblLow;
         private System.Windows.Forms.ProgressBar progressBar;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnGet52DataToday;
         private System.Windows.Forms.TabPage tabSearchDates;
         private System.Windows.Forms.TextBox tbSearchDates;
         private System.Windows.Forms.Button btnSearchDates;
         private System.Windows.Forms.RichTextBox rtbHighLowDates;
         private System.Windows.Forms.Label labelSearchDates;
         private System.Windows.Forms.Button btnClearDates;
+        private System.Windows.Forms.Button btnUpdateFile;
     }
 }
 
